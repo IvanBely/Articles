@@ -1,0 +1,10 @@
+app:
+  host: http://articles.exaple.com
+  public_list_size: 10
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:8889/articles
+  hibernate:
+    ddl-auto: update

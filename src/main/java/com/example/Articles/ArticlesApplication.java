@@ -1,13 +1,12 @@
-package com.example.Articles.Stories;
+package com.example.Articles;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
-
+public class ArticlesApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(ArticlesApplication.class, args);
 	}
 
 }
