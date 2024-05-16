@@ -4,7 +4,7 @@ import com.example.Articles.Config.UrlConfig;
 import com.example.Articles.dto.request.ArticlesRequest;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.dto.response.ArticlesUrlResponse;
-import com.example.Articles.model.ArticlesModel;
+import com.example.Articles.model.Articles;
 import com.example.Articles.repository.ArticlesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,18 +22,18 @@ public class ArticlesServiceImpl implements ArticlesService {
 
     @Override
     public ArticlesResponse getByHash(String hash) {
-        // Получаем объект ArticlesModel из репозитория по хешу
-        ArticlesModel articlesModel = articlesRepository.getByHash(hash);
+        // Получаем объект Articles из репозитория по хешу
+        Articles Articles = articlesRepository.getByHash(hash);
 
         // Проверяем, найден ли объект
-        if (articlesModel == null) {
+        if (Articles == null) {
             return null; // или бросить исключение
         }
-        // Преобразуем ArticlesModel в ArticlesResponse
+        // Преобразуем Articles в ArticlesResponse
         ArticlesResponse articlesResponse = new ArticlesResponse();
-        articlesResponse.setName(articlesModel.getName());
-        articlesResponse.setDescription(articlesModel.getDescription());
-        articlesResponse.setPublic(articlesModel.isPublic());
+        articlesResponse.setName(Articles.getName());
+        articlesResponse.setDescription(Articles.getDescription());
+        articlesResponse.setPublic(Articles.isPublic());
 
         return articlesResponse;
     }
@@ -41,10 +41,11 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     public List<ArticlesResponse> getFirstPublicArticles() {
         // Записываем первые 10 статей, которые isPublic и lifeTime - OK.
-        List<ArticlesModel> list = articlesRepository.findPublicArticlesWithValidLifeTime(urlConfig.getPublicListSize());
+        List<Articles> list = articlesRepository.findAll();
 
-        return list.stream().map(articlesModel ->
-                        new ArticlesResponse(articlesModel.getName(), articlesModel.getDescription(), articlesModel.isPublic()))
+
+        return list.stream().map(Articles ->
+                        new ArticlesResponse(Articles.getName(), Articles.getDescription(), Articles.isPublic()))
                 .collect(Collectors.toList());
     }
 
@@ -52,15 +53,15 @@ public class ArticlesServiceImpl implements ArticlesService {
     public ArticlesUrlResponse addAndResponseUrl(ArticlesRequest articlesRequest) {
         String hash = сreateArticlesHashImpl.createHashUrl(articlesRequest);
 
-        ArticlesModel articlesModel = new ArticlesModel();
-        articlesModel.setHash(hash);
-        articlesModel.setName(articlesRequest.getName());
-        articlesModel.setDescription(articlesRequest.getDescription());
-        articlesModel.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
-        articlesModel.setLifeTime(articlesRequest.getLifeTime());
-        articlesModel.setPublic(articlesRequest.isPublic());
-        articlesRepository.save(articlesModel); // Сохраняем в базу данных
+        Articles Articles = new Articles();
+        Articles.setHash(hash);
+        Articles.setName(articlesRequest.getName());
+        Articles.setDescription(articlesRequest.getDescription());
+        Articles.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
+        Articles.setLifeTime(articlesRequest.getLifeTime());
+        Articles.setPublic(articlesRequest.isPublic());
+        articlesRepository.save(Articles); // Сохраняем в базу данных
 
-        return new ArticlesUrlResponse(urlConfig.getHost() + "/" + articlesModel.getHash());
+        return new ArticlesUrlResponse(urlConfig.getHost() + "/" + Articles.getHash());
     }
 }
