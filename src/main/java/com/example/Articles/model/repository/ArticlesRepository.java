@@ -1,9 +1,10 @@
 package com.example.Articles.model.repository;
 
 import com.example.Articles.model.Articles;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +21,7 @@ public interface ArticlesRepository extends JpaRepository<Articles, Long> {
             "    ELSE true " +
             "END) = true " +
             "ORDER BY a.id DESC")
-    List<Articles> findPublicArticlesWithValidLifeTime(@Param("count") int count); // поиск действующих по сроку годности
-    // записей в размере int count
+    Page<Articles> findPublicArticlesWithValidLifeTime(Pageable pageable);
 
     List<Articles> findAllByUserId(Long userId);
 }

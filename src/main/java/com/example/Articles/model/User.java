@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,5 +19,6 @@ public class Users {
     @Column(unique = true)
     private String accountName;
     private String password;
+    private String roles;
 
 }

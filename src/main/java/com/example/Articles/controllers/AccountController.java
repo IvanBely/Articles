@@ -3,27 +3,31 @@ package com.example.Articles.controllers;
 import com.example.Articles.dto.request.ArticlesRequest;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.dto.response.ArticlesUrlResponse;
-import com.example.Articles.model.Users;
-import com.example.Articles.model.repository.UsersRepository;
-import com.example.Articles.service.impl.ArticlesServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.example.Articles.model.User;
+import com.example.Articles.model.repository.UserRepository;
+import com.example.Articles.service.impl.AccountArticlesServiceImpl;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("api")
+@AllArgsConstructor
 public class AccountController {
-    private final ArticlesServiceImpl articlesService;
-    private final UsersRepository usersRepository;
+    private final AccountArticlesServiceImpl accountArticlesService;
+    private final UserRepository userRepository;
 
-    @GetMapping("/{accountName}") // ToDo // только зарегестрированному
+    @GetMapping("/{accountName}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<List<ArticlesResponse>> getAccountArticles(@PathVariable String accountName) {
-        Optional<Users> userOptional = usersRepository.findByAccountName(accountName);
+        Optional<User> userOptional = userRepository.findByAccountName(accountName);
         if (userOptional.isPresent()) {
-            List<ArticlesResponse> articles = articlesService.getAccountArticles(userOptional.get());
+            List<ArticlesResponse> articles = accountArticlesService.getAccountArticles(userOptional.get());
             if (!articles.isEmpty()) {
                 return ResponseEntity.ok(articles);
             } else {
@@ -34,11 +38,12 @@ public class AccountController {
         }
     }
 
-    @PostMapping("/{accountName}") // ToDo // только зарегестрированному
+    @PostMapping("/{accountName}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<ArticlesUrlResponse> add(@PathVariable String accountName, @RequestBody ArticlesRequest request) {
-        Optional<Users> userOptional = usersRepository.findByAccountName(accountName);
+        Optional<User> userOptional = userRepository.findByAccountName(accountName);
         if (userOptional.isPresent()) {
-            ArticlesUrlResponse response = articlesService.addAndResponseUrl(userOptional.get(), request);
+            ArticlesUrlResponse response = accountArticlesService.addAndResponseUrl(userOptional.get(), request);
             if (response != null) {
                 return ResponseEntity.ok(response);
             } else {
