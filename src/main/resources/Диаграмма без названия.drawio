@@ -75,7 +75,7 @@
         <mxCell id="cqbyD7AR5l0-aXJPCYrJ-26" value="Repository" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="400" y="440" width="280" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="cqbyD7AR5l0-aXJPCYrJ-28" value="Articles&lt;div&gt;Long id&lt;/div&gt;&lt;div&gt;String name&lt;/div&gt;&lt;div&gt;String decription&lt;/div&gt;&lt;div&gt;String hash&lt;/div&gt;&lt;div&gt;LocalDateTime&lt;/div&gt;&lt;div&gt;Boolean isPublic&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="cqbyD7AR5l0-aXJPCYrJ-28" value="ArticlesModel&lt;div&gt;Long id&lt;/div&gt;&lt;div&gt;String name&lt;/div&gt;&lt;div&gt;String decription&lt;/div&gt;&lt;div&gt;String hash&lt;/div&gt;&lt;div&gt;LocalDateTime&lt;/div&gt;&lt;div&gt;Boolean isPublic&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="70" y="400" width="130" height="120" as="geometry" />
         </mxCell>
         <mxCell id="cqbyD7AR5l0-aXJPCYrJ-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.775;entryY=1.042;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="cqbyD7AR5l0-aXJPCYrJ-26" target="cqbyD7AR5l0-aXJPCYrJ-1">
