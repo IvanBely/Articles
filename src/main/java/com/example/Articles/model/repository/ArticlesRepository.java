@@ -1,4 +1,4 @@
-package com.example.Articles.repository;
+package com.example.Articles.model.repository;
 
 import com.example.Articles.model.Articles;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticlesRepository extends JpaRepository<Articles, Long> {
-    Articles getByHash(String hash);
+    Optional<Articles> getByHash(String hash);
 
     @Query("SELECT a FROM Articles a WHERE a.isPublic = true " +
             "AND (CASE a.lifeTime " +
@@ -21,4 +22,6 @@ public interface ArticlesRepository extends JpaRepository<Articles, Long> {
             "ORDER BY a.id DESC")
     List<Articles> findPublicArticlesWithValidLifeTime(@Param("count") int count); // поиск действующих по сроку годности
     // записей в размере int count
+
+    List<Articles> findAllByUserId(Long userId);
 }

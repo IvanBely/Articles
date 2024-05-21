@@ -1,7 +1,7 @@
-package com.example.Articles.service;
+package com.example.Articles.service.impl;
 
 import com.example.Articles.dto.request.ArticlesRequest;
-import com.example.Articles.repository.ArticlesRepository;
+import com.example.Articles.service.CreateArticlesHash;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

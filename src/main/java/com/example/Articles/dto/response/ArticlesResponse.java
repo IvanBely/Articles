@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class ArticlesResponse {
     private String name;
     private String description;
-    private boolean isPublic;
 }
