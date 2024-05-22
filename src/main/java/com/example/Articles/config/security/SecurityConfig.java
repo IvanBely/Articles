@@ -1,4 +1,4 @@
-package com.example.Articles.Config.security;
+package com.example.Articles.config.security;
 
 import com.example.Articles.service.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +25,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/new-user").permitAll()
-                        .requestMatchers("api/**").authenticated())
+                        .requestMatchers("/**", "/new-user**").permitAll()
+                        .requestMatchers("/api/**").authenticated())
                 .formLogin(form -> form.permitAll())
                 .build();
     }
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        return http.csrf(AbstractHttpConfigurer::disable)
+//                .authorizeHttpRequests(auth -> auth.requestMatchers("/", "/new-user").permitAll()
+//                        .requestMatchers("api/v1/apps/**").authenticated())
+//                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+//                .build();
+//    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

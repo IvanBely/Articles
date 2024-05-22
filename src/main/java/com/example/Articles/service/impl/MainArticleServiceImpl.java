@@ -1,9 +1,8 @@
 package com.example.Articles.service.impl;
 
-import com.example.Articles.Config.UrlConfig;
+import com.example.Articles.config.UrlConfig;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.model.Articles;
-import com.example.Articles.model.User;
 import com.example.Articles.model.repository.ArticlesRepository;
 import com.example.Articles.model.repository.UserRepository;
 import com.example.Articles.service.MainArticleService;

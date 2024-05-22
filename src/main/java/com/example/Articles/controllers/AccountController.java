@@ -7,7 +7,7 @@ import com.example.Articles.model.User;
 import com.example.Articles.model.repository.UserRepository;
 import com.example.Articles.service.impl.AccountArticlesServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,30 +16,27 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api")
 @AllArgsConstructor
 public class AccountController {
     private final AccountArticlesServiceImpl accountArticlesService;
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{accountName}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ArticlesResponse>> getAccountArticles(@PathVariable String accountName) {
         Optional<User> userOptional = userRepository.findByAccountName(accountName);
         if (userOptional.isPresent()) {
             List<ArticlesResponse> articles = accountArticlesService.getAccountArticles(userOptional.get());
-            if (!articles.isEmpty()) {
-                return ResponseEntity.ok(articles);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(articles);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/{accountName}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ArticlesUrlResponse> add(@PathVariable String accountName, @RequestBody ArticlesRequest request) {
         Optional<User> userOptional = userRepository.findByAccountName(accountName);
         if (userOptional.isPresent()) {

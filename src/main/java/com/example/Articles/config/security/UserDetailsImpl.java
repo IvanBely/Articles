@@ -1,4 +1,4 @@
-package com.example.Articles.Config.security;
+package com.example.Articles.config.security;
 
 import com.example.Articles.model.User;
 import lombok.RequiredArgsConstructor;

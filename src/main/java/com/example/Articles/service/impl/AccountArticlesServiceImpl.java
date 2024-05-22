@@ -1,6 +1,6 @@
 package com.example.Articles.service.impl;
 
-import com.example.Articles.Config.UrlConfig;
+import com.example.Articles.config.UrlConfig;
 import com.example.Articles.dto.request.ArticlesRequest;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.dto.response.ArticlesUrlResponse;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountArticlesServiceImpl implements AccountArticlesService {
     private final CreateArticlesHashImpl сreateArticlesHashImpl;
     private final ArticlesRepository articlesRepository;
@@ -56,6 +56,7 @@ public class AccountArticlesServiceImpl implements AccountArticlesService {
         Articles.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
         Articles.setLifeTime(articlesRequest.getLifeTime());
         Articles.setPublic(articlesRequest.isPublic());
+        Articles.setLikesCount(0);
         articlesRepository.save(Articles); // Сохраняем в базу данных
 
         return new ArticlesUrlResponse(urlConfig.getHost() + "/" + Articles.getHash());
