@@ -5,11 +5,10 @@ import com.example.Articles.dto.request.ArticlesRequest;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.dto.response.ArticlesUrlResponse;
 import com.example.Articles.model.Articles;
-import com.example.Articles.model.User;
+import com.example.Articles.model.Users;
 import com.example.Articles.model.repository.ArticlesRepository;
-import com.example.Articles.model.repository.UserRepository;
-import com.example.Articles.service.AccountArticlesService;
-import lombok.AllArgsConstructor;
+import com.example.Articles.model.repository.UsersRepository;
+import com.example.Articles.service.AccountArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,16 +19,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AccountArticlesServiceImpl implements AccountArticlesService {
-    private final CreateArticlesHashImpl сreateArticlesHashImpl;
+public class AccountArticleServiceImpl implements AccountArticleService {
+    private final CreateArticleHashImpl сreateArticlesHashImpl;
     private final ArticlesRepository articlesRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final UrlConfig urlConfig;
     private final PasswordEncoder passwordEncoder;
 
 
     @Override
-    public List<ArticlesResponse> getAccountArticles(User user) {
+    public List<ArticlesResponse> getAccountArticles(Users user) {
 
         List<Articles> articlesList = articlesRepository.findAllByUserId(user.getId());
 
@@ -39,13 +38,13 @@ public class AccountArticlesServiceImpl implements AccountArticlesService {
     }
 
     @Override
-    public void addUser(User user) {
+    public void addUser(Users user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        usersRepository.save(user);
     }
 
     @Override
-    public ArticlesUrlResponse addAndResponseUrl(User user, ArticlesRequest articlesRequest) {
+    public ArticlesUrlResponse createArticleAndResponseUrl(Users user, ArticlesRequest articlesRequest) {
         String hash = сreateArticlesHashImpl.createHashUrl();
 
         Articles Articles = new Articles();

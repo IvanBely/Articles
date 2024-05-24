@@ -27,7 +27,7 @@ public class Articles {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     @OneToMany(mappedBy = "article")
     private List<Comments> commentsList;

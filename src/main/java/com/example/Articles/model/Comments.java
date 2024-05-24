@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "comments")
 @Data
@@ -18,8 +20,7 @@ public class Comments {
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Articles article;
-
-
+    private LocalDateTime createTime;
     private String commentText;
     private int likesComment;
 

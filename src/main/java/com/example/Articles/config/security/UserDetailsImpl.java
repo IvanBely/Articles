@@ -1,6 +1,6 @@
 package com.example.Articles.config.security;
 
-import com.example.Articles.model.User;
+import com.example.Articles.model.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private final User user;
+    private final Users user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -28,6 +28,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
+        return user.getUsername();
+    }
+    public String getEmail() {
         return user.getEmail();
     }
 

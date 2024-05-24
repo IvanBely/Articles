@@ -1,6 +1,6 @@
 package com.example.Articles.service.impl;
 
-import com.example.Articles.service.CreateArticlesHash;
+import com.example.Articles.service.CreateArticleHash;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class CreateArticlesHashImpl implements CreateArticlesHash {
+public class CreateArticleHashImpl implements CreateArticleHash {
     @Override
     public String createHashUrl() {
         UUID uuid = UUID.randomUUID();

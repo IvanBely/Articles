@@ -3,8 +3,11 @@ package com.example.Articles.service.impl;
 import com.example.Articles.config.UrlConfig;
 import com.example.Articles.dto.response.ArticlesResponse;
 import com.example.Articles.model.Articles;
+import com.example.Articles.model.Comments;
+import com.example.Articles.model.Users;
 import com.example.Articles.model.repository.ArticlesRepository;
-import com.example.Articles.model.repository.UserRepository;
+import com.example.Articles.model.repository.CommentsRepository;
+import com.example.Articles.model.repository.UsersRepository;
 import com.example.Articles.service.MainArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -17,13 +20,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MainArticleServiceImpl implements MainArticleService {
     private final ArticlesRepository articlesRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository userRepository;
     private final UrlConfig urlConfig;
-
+    private final CommentsRepository commentsRepository;
     @Override
-    public Optional<ArticlesResponse> getByHash(String hash) {
+    public Optional<Articles> findByHash(String hash) {
+        return articlesRepository.findByHash(hash);
+    }
+    @Override
+    public Optional<ArticlesResponse> getFormByHash(String hash) {
         // Получаем объект Articles из репозитория по хешу
-        Optional<Articles> articlesOptional = articlesRepository.getByHash(hash);
+        Optional<Articles> articlesOptional = articlesRepository.findByHash(hash);
 
         // Проверяем, найден ли объект. И публичный ли он.
         if (articlesOptional.isPresent() && articlesOptional.get().isPublic()) {
@@ -42,7 +49,7 @@ public class MainArticleServiceImpl implements MainArticleService {
 
     @Override
     public List<ArticlesResponse> getFirstPublicArticles() {
-        // Записываем первые 10 статей, которые isPublic и lifeTime - OK.
+        // Записываем первые listSize статей, которые isPublic и lifeTime - OK.
         int listSize = urlConfig.getPublicListSize();
         List<Articles> articlesList = articlesRepository
                 .findPublicArticlesWithValidLifeTime(PageRequest.of(0, listSize)).getContent();
