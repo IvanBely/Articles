@@ -5,23 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "comments")
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comments {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "article_id")
-    private Articles article;
-    private LocalDateTime createTime;
-    private String commentText;
-    private int likesComment;
+    @Column(unique = true)
+    private String email;
+    @Column(unique = true)
+    private String username;
+    private String password;
+    private String roles;
 
 }

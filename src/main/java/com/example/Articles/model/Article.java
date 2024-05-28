@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Articles {
+public class Article {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
@@ -27,9 +27,9 @@ public class Articles {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users user;
+    private User user;
 
     @OneToMany(mappedBy = "article")
-    private List<Comments> commentsList;
+    private List<Comment> CommentList;
 }
 

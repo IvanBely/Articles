@@ -1,8 +1,8 @@
 package com.example.Articles.service.security;
 
 import com.example.Articles.config.security.UserDetailsImpl;
-import com.example.Articles.model.Users;
-import com.example.Articles.model.repository.UsersRepository;
+import com.example.Articles.model.User;
+import com.example.Articles.model.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,11 +14,11 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UsersRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         return user.map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }

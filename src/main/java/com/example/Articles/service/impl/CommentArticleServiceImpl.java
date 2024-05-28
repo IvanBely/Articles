@@ -1,11 +1,11 @@
 package com.example.Articles.service.impl;
 
-import com.example.Articles.dto.request.ArticlesRequest;
-import com.example.Articles.model.Articles;
-import com.example.Articles.model.Comments;
-import com.example.Articles.model.Users;
-import com.example.Articles.model.repository.ArticlesRepository;
-import com.example.Articles.model.repository.CommentsRepository;
+import com.example.Articles.dto.request.ArticleRequest;
+import com.example.Articles.model.Article;
+import com.example.Articles.model.Comment;
+import com.example.Articles.model.User;
+import com.example.Articles.model.repository.ArticleRepository;
+import com.example.Articles.model.repository.CommentRepository;
 import com.example.Articles.service.CommentArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CommentArticleServiceImpl implements CommentArticleService {
-    private final CommentsRepository commentsRepository;
-    private final ArticlesRepository articlesRepository;
+    private final CommentRepository commentRepository;
+    private final ArticleRepository articleRepository;
     @Override
-    public void addCommentToArticle(Users user, Articles article, String commentText) {
+    public void addCommentToArticle(User user, Article article, String commentText) {
         // Создаем новый комментарий
-        Comments comment = new Comments();
+        Comment comment = new Comment();
         comment.setArticle(article);
         comment.setCommentText(commentText);
         comment.setLikesComment(0); // Устанавливаем начальное значение лайков
@@ -29,23 +29,23 @@ public class CommentArticleServiceImpl implements CommentArticleService {
         comment.setCreateTime(LocalDateTime.now());
 
         // Сохраняем комментарий
-        commentsRepository.save(comment);
+        commentRepository.save(comment);
 
         // Добавляем комментарий к списку комментариев статьи
-        article.getCommentsList().add(comment);
+        article.getCommentList().add(comment);
         // Обновляем статью в базе данных
-        articlesRepository.save(article);
+        articleRepository.save(article);
     }
     @Override
-    public void updateComment(Long commentId, ArticlesRequest updatedComment) {
+    public void updateComment(Long commentId, String newCommentText) {
         // Получаем комментарий по его ID
-        Optional<Comments> optionalComment = commentsRepository.findById(commentId);
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if (optionalComment.isPresent()) {
-            Comments comment = optionalComment.get();
+            Comment comment = optionalComment.get();
             // Обновляем текст комментария
-            comment.setCommentText(updatedComment.getCommentText());
+            comment.setCommentText(newCommentText);
             // Сохраняем изменения в базе данных
-            commentsRepository.save(comment);
+            commentRepository.save(comment);
         } else {
             // Если комментарий не найден, можно сгенерировать исключение или обработать иным способом
             // В данном примере просто выводим сообщение в консоль
@@ -55,6 +55,6 @@ public class CommentArticleServiceImpl implements CommentArticleService {
     @Override
     public void deleteComment(Long commentId) {
         // Удаляем комментарий по его ID
-        commentsRepository.deleteById(commentId);
+        commentRepository.deleteById(commentId);
     }
 }

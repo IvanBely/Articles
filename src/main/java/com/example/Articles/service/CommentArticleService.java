@@ -1,12 +1,11 @@
 package com.example.Articles.service;
 
-import com.example.Articles.dto.request.ArticlesRequest;
-import com.example.Articles.model.Articles;
-import com.example.Articles.model.Users;
+import com.example.Articles.dto.request.ArticleRequest;
+import com.example.Articles.model.Article;
+import com.example.Articles.model.User;
 
 public interface CommentArticleService {
-    void addCommentToArticle(Users user, Articles article, String commentText);
-    void createComment(Users user, ArticlesRequest articlesRequest);
-    void updateComment(Long articleId, ArticlesRequest updatedArticle);
+    void addCommentToArticle(User user, Article article, String commentText);
+    void updateComment(Long articleId, String newCommentText);
     void deleteComment(Long articleId);
 }

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Articles</artifactId>
+	<artifactId>Article</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Articles</name>
-	<description>ArticlesAndStories demo project</description>
+	<name>Article</name>
+	<description>ArticleAndStories demo project</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
@@ -33,6 +33,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
 		<dependency>

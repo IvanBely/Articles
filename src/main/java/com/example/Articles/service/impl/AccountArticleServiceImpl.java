@@ -1,13 +1,15 @@
 package com.example.Articles.service.impl;
 
 import com.example.Articles.config.UrlConfig;
-import com.example.Articles.dto.request.ArticlesRequest;
-import com.example.Articles.dto.response.ArticlesResponse;
-import com.example.Articles.dto.response.ArticlesUrlResponse;
-import com.example.Articles.model.Articles;
-import com.example.Articles.model.Users;
-import com.example.Articles.model.repository.ArticlesRepository;
-import com.example.Articles.model.repository.UsersRepository;
+import com.example.Articles.dto.request.ArticleRequest;
+import com.example.Articles.dto.response.ArticleResponse;
+import com.example.Articles.dto.response.ArticleUrlResponse;
+import com.example.Articles.model.Article;
+import com.example.Articles.model.User;
+import com.example.Articles.model.repository.ArticleRepository;
+import com.example.Articles.model.repository.UserRepository;
+import com.example.Articles.service.AccountArticleService;
+import com.example.Article.service.CreateArticleHash;
 import com.example.Articles.service.AccountArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,44 +22,38 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AccountArticleServiceImpl implements AccountArticleService {
-    private final CreateArticleHashImpl сreateArticlesHashImpl;
-    private final ArticlesRepository articlesRepository;
-    private final UsersRepository usersRepository;
+    private final CreateArticleHash сreateArticleHash;
+    private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
     private final UrlConfig urlConfig;
     private final PasswordEncoder passwordEncoder;
 
 
     @Override
-    public List<ArticlesResponse> getAccountArticles(Users user) {
+    public List<ArticleResponse> getAccountArticle(User user) {
 
-        List<Articles> articlesList = articlesRepository.findAllByUserId(user.getId());
+        List<Article> articleList = articleRepository.findAllByUserId(user.getId());
 
-        return articlesList.stream().map(Articles ->
-                        new ArticlesResponse(Articles.getName(), Articles.getDescription()))
+        return articleList.stream().map(article ->
+                        new ArticleResponse(article.getName(), article.getDescription()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void addUser(Users user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
-    }
+    public ArticleUrlResponse createArticleAndResponseUrl(User user, ArticleRequest articleRequest) {
+        String hash = сreateArticleHash.createHashUrl();
 
-    @Override
-    public ArticlesUrlResponse createArticleAndResponseUrl(Users user, ArticlesRequest articlesRequest) {
-        String hash = сreateArticlesHashImpl.createHashUrl();
+        Article article = new Article();
+        article.setUser(user);
+        article.setHash(hash);
+        article.setName(articleRequest.getName());
+        article.setDescription(articleRequest.getDescription());
+        article.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
+        article.setLifeTime(articleRequest.getLifeTime());
+        article.setPublic(articleRequest.isPublic());
+        article.setLikesCount(0);
+        articleRepository.save(article); // Сохраняем в базу данных
 
-        Articles Articles = new Articles();
-        Articles.setUser(user);
-        Articles.setHash(hash);
-        Articles.setName(articlesRequest.getName());
-        Articles.setDescription(articlesRequest.getDescription());
-        Articles.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
-        Articles.setLifeTime(articlesRequest.getLifeTime());
-        Articles.setPublic(articlesRequest.isPublic());
-        Articles.setLikesCount(0);
-        articlesRepository.save(Articles); // Сохраняем в базу данных
-
-        return new ArticlesUrlResponse(urlConfig.getHost() + "/" + Articles.getHash());
+        return new ArticleUrlResponse(urlConfig.getHost() + "/" + article.getHash());
     }
 }

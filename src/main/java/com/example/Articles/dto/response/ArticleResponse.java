@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticlesResponse {
+public class ArticleResponse {
     private String name;
     private String description;
 }

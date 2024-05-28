@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class ArticlesUrlResponse {
+public class ArticleUrlResponse {
     private final String url;
 }
