@@ -7,12 +7,10 @@ import com.example.Articles.dto.response.ArticleUrlResponse;
 import com.example.Articles.model.Article;
 import com.example.Articles.model.User;
 import com.example.Articles.model.repository.ArticleRepository;
-import com.example.Articles.model.repository.UserRepository;
 import com.example.Articles.service.AccountArticleService;
-import com.example.Article.service.CreateArticleHash;
-import com.example.Articles.service.AccountArticleService;
+import com.example.Articles.service.CreateArticleHash;
+import com.example.Articles.service.CreateTimeFormService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,11 +20,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AccountArticleServiceImpl implements AccountArticleService {
-    private final CreateArticleHash сreateArticleHash;
+    private final CreateArticleHash createArticleHash;
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final CreateTimeFormService createTimeFormService;
     private final UrlConfig urlConfig;
-    private final PasswordEncoder passwordEncoder;
+
 
 
     @Override
@@ -34,14 +32,15 @@ public class AccountArticleServiceImpl implements AccountArticleService {
 
         List<Article> articleList = articleRepository.findAllByUserId(user.getId());
 
-        return articleList.stream().map(article ->
-                        new ArticleResponse(article.getName(), article.getDescription()))
+        return articleList.stream()
+                .map(article ->
+                        new ArticleResponse(article.getName(), article.getDescription(), article.getUser().getUsername(), createTimeFormService.createTimeForm(article)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ArticleUrlResponse createArticleAndResponseUrl(User user, ArticleRequest articleRequest) {
-        String hash = сreateArticleHash.createHashUrl();
+        String hash = createArticleHash.createHashUrl();
 
         Article article = new Article();
         article.setUser(user);

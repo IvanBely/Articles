@@ -2,6 +2,7 @@ package com.example.Articles.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,13 +24,15 @@ public class Article {
     private LocalDateTime createTime;
     @Enumerated(EnumType.STRING)
     private LifeTime lifeTime;
+    @NotNull
     private boolean isPublic;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "article")
-    private List<Comment> CommentList;
+    private List<Comment> commentList;
 }
+
 

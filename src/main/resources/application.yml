@@ -1,5 +1,5 @@
 app:
-  host: http://Article.example.com
+  host: http://article.example.com
   public_list_size: 10
 
 server:
@@ -7,7 +7,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:8889/Article_sql
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:8889/articles_sql
     username: root
     password: root
   jpa:

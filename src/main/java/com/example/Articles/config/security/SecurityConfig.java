@@ -30,8 +30,11 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .requestMatchers("/api/**").authenticated())
                 .formLogin(form -> form
-                        .usernameParameter("username")
-                        .passwordParameter("password")
+                        .loginPage("/auth/login")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/")
                         .permitAll())
                 .build();
     }

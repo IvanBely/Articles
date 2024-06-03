@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class ArticleResponse {
     private String name;
     private String description;
+    private String username;
+    private String createTime;
 }

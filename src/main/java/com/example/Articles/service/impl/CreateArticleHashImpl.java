@@ -1,6 +1,6 @@
 package com.example.Articles.service.impl;
 
-import com.example.Article.service.CreateArticleHash;
+import com.example.Articles.service.CreateArticleHash;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

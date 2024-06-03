@@ -46,15 +46,10 @@ public class CommentArticleServiceImpl implements CommentArticleService {
             comment.setCommentText(newCommentText);
             // Сохраняем изменения в базе данных
             commentRepository.save(comment);
-        } else {
-            // Если комментарий не найден, можно сгенерировать исключение или обработать иным способом
-            // В данном примере просто выводим сообщение в консоль
-            System.out.println("Comment not found with ID: " + commentId);
         }
     }
     @Override
     public void deleteComment(Long commentId) {
-        // Удаляем комментарий по его ID
         commentRepository.deleteById(commentId);
     }
 }

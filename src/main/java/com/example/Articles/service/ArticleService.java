@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ArticleService {
     Optional<Article> findByHash(String hash);
-    Optional<ArticleResponse> getFormByHash(String hash);
+    Optional<ArticleResponse> getArticleResponseByHash(String hash);
     
     List<ArticleResponse> getFirstPublicArticle();
 }

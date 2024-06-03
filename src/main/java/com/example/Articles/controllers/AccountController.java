@@ -9,25 +9,27 @@ import com.example.Articles.service.AccountArticleService;
 import com.example.Articles.service.impl.AccountArticleServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 @RestController
-@RequestMapping("/api")
-@AllArgsConstructor
+@RequestMapping("/user")
 public class AccountController {
-    private final AccountArticleService accountArticleservice;
     @Autowired
-    private UserRepository UserRepository;
+    private AccountArticleService accountArticleservice;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{username}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ArticleResponse>> getAccountArticle(@PathVariable String username) {
-        Optional<User> userOptional = UserRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             List<ArticleResponse> Article = accountArticleservice.getAccountArticle(userOptional.get());
             return ResponseEntity.ok(Article);
@@ -37,19 +39,15 @@ public class AccountController {
     }
 
     @PostMapping("/{username}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ArticleUrlResponse> add(@PathVariable String username, @RequestBody ArticleRequest articleRequest) {
-        Optional<User> userOptional = UserRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            ArticleUrlResponse response = accountArticleservice.createArticleAndResponseUrl(userOptional.get(), articleRequest);
-            if (response != null) {
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
+    public ResponseEntity<ArticleUrlResponse> add(
+            @RequestBody ArticleRequest articleRequest,
+            @AuthenticationPrincipal User user) {
+        ArticleUrlResponse response = accountArticleservice.createArticleAndResponseUrl(user, articleRequest);
+
+        if (response != null) {
+            return ResponseEntity.ok(response); // Возвращает ответ с URL
         } else {
-            // Если пользователь не найден, возвращаем 404 Not Found
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Возвращает ошибку 500
         }
     }
 }
