@@ -71,16 +71,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void setEmail(User user, String newEmail) {
         user.setEmail(newEmail);
+        userRepository.save(user);
     }
 
     @Override
     public void setUsername(User user, String newUsername) {
         user.setUsername(newUsername);
+        userRepository.save(user);
     }
 
     @Override
     public void setPassword(User user, String newPassword) {
         user.setPassword(newPassword);
+        userRepository.save(user);
     }
 
     @Override
