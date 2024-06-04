@@ -1,5 +1,5 @@
-# Статьи и истории | Article and Stories
-
+# <h1 align="center">Статьи и истории | Article and Stories</h1>
+***
 ## Описание:
 Проект "Статьи и истории" представляет собой Spring-приложение, работающее с локально установленной базой данных MySQL или PostgreSQL. Приложение позволяет пользователям размещать свои статьи на определенный срок (день, неделя, месяц, год или бесконечно). Есть возможность сделать статью публичной, чтобы она была видна на корневой странице, или не публичной, чтобы доступ к ней был только по ссылке и виден на странице автора, авторизованным пользователям.
 
@@ -9,10 +9,10 @@
 
 Авторы могут редактировать и удалять свои статьи. Раз в день статьи, у которых истек срок годности, удаляются из базы данных.
 Для приятного представления, с помощью библиотеки PrettyTime, видно когда была добавлена статья **(3 часа назад, 1 день назад, 2 недели назад и тд.)**
-
+***
 ## Stack:
 Java версии 21, Spring Boot версии 3.2.4, Maven, Hibernate, Spring Boot Security, Spring Data JPA, Lombok, MySQL, PostgreSQL, Logback, PrittyTime.
-
+***
 ## API Спецификация
 
 * GET /
@@ -53,3 +53,42 @@ Java версии 21, Spring Boot версии 3.2.4, Maven, Hibernate, Spring B
 * POST /user/{user}
 
 > Отправляем запрос на создание статьи 
+***
+## Инструкция по запуску локально
+* Для того, чтобы запустить проект локально вам необходимы JDK 16, система контроля версий git, сборщик проектов maven.
+  Клонировать проект можно через git bash:
+> git clone https://github.com/IvanBely/SkillboxDiplom_SearchEngine.git
+* Необходимо создать пустую базу данных search_engine (mysql)
+``` roomsql
+create database search_engine;
+ ```
+* Далее вам нужно изменить такие параметры, как пароль и логин и url к подключению базы данных. Эти переменные лежат в файле application.yaml.
+
+Часть файла:
+ ``` yaml
+spring:
+  datasource:
+    username: root
+#      указать имя базы данных
+    password: root
+#      указать пароль бызы данных
+    url: jdbc:mysql://localhost:3306/search_engine2?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
+#      указать необходимый url
+indexing-settings:
+  sites:
+      - url: https://playback.ru
+#      индексируемый сайт
+        name: PlayBack
+#      имя
+
+``` 
+* Также необходимо настроить систему управления базами данных (PostgreSQL) и также изменить такие параметры, как пароль и логин и url к подключению базы данных
+ ``` properties
+server.port=8080
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:5432/search_engine
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+```
+## Как осуществляется поиск
+После запуска проекта, по адресу http://localhost:8080/ станет доступен веб-интерфейс. Он представляет собой одну веб-страницу с тремя вкладками:
