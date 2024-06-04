@@ -1,6 +1,7 @@
 package com.example.Articles.model.repository;
 
 import com.example.Articles.model.Article;
+import com.example.Articles.model.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByHash(String hash);
+    Optional<Article> findById(Long id);
 
     @Query("SELECT a FROM Article a WHERE a.isPublic = true " +
             "AND (CASE a.lifeTime " +

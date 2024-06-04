@@ -1,16 +1,25 @@
 package com.example.Articles.controllers;
 
+import com.example.Articles.dto.request.ArticleRequest;
 import com.example.Articles.dto.request.CommentRequest;
 import com.example.Articles.dto.response.ArticleResponse;
+import com.example.Articles.dto.response.ArticleUrlResponse;
 import com.example.Articles.model.Article;
 import com.example.Articles.model.Comment;
 import com.example.Articles.model.User;
+import com.example.Articles.model.repository.ArticleRepository;
 import com.example.Articles.model.repository.CommentRepository;
+import com.example.Articles.model.repository.UserRepository;
+
+import com.example.Articles.service.AccountService;
 import com.example.Articles.service.ArticleService;
-import com.example.Articles.service.CommentArticleService;
+
+import com.example.Articles.service.CommentService;
 import com.example.Articles.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,15 +35,12 @@ public class ArticleController {
     @Autowired
     private UserService userService;
     @Autowired
-    private CommentArticleService commentArticleService;
+    private UserRepository userRepository;
     @Autowired
-    private CommentRepository commentRepository;
+    private AccountService accountService;
+    @Autowired
+    private ArticleRepository articleRepository;
 
-    @GetMapping("/")
-    public ResponseEntity<List<ArticleResponse>> getPublicList() {
-        List<ArticleResponse> ArticleResponseList = articleService.getFirstPublicArticle();
-        return ResponseEntity.ok(ArticleResponseList);
-    }
     @GetMapping("/{hash}")
     public ResponseEntity<ArticleResponse> getByHash(
             @PathVariable String hash) {
@@ -45,55 +51,57 @@ public class ArticleController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping("/{hash}")
-    public ResponseEntity<String> addCommentToArticle(
-            @PathVariable String hash,
-            @RequestBody CommentRequest commentRequest,
+    @PostMapping("/{username}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ArticleUrlResponse> createArticle(
+            @RequestBody ArticleRequest articleRequest,
             Principal principal) {
         String username = principal.getName();
-        String commentText = commentRequest.getText();
-        // Ищем статью по ее хешу
-        Optional<Article> optionalArticle = articleService.findByHash(hash);
-        Optional<User> optionalUser = userService.findByUsername(username);
-        if (optionalArticle.isPresent() && optionalUser.isPresent()) {
-            // Получаем статью
-            Article article = optionalArticle.get();
-            // Получаем пользователя
-            User user = optionalUser.get();
-            // Добавляем комментарий к статье
-            commentArticleService.addCommentToArticle(user, article, commentText);
-            return ResponseEntity.ok("Comment added successfully.");
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        ArticleUrlResponse response = articleService.createArticleAndResponseUrl(userOptional.get(), articleRequest);
+
+        if (response != null) {
+            return ResponseEntity.ok(response); // Возвращает ответ с URL
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Возвращает ошибку 500
+        }
+    }
+    @PutMapping("/{username}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> updateArticle(
+            @RequestBody ArticleRequest articleRequest,
+            @RequestParam Long articleId,
+            Principal principal) {
+
+        String username = principal.getName();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+
+        if (userOptional.isPresent() && optionalArticle.isPresent()) {
+
+            articleService.updateArticle(userOptional.get(), articleRequest, optionalArticle.get());
+            return ResponseEntity.ok("Article update successfully.");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping("/{hash}")
-    public ResponseEntity<String> updateCommentInArticle(
-            @PathVariable String hash,
-            @PathVariable Long commentId,
-            @RequestBody CommentRequest commentRequest,
-            @AuthenticationPrincipal User user) {
+    @DeleteMapping("/{username}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> deleteArticle(
+            @RequestBody ArticleRequest articleRequest,
+            @RequestParam Long articleId,
+            Principal principal) {
 
-        String commentText = commentRequest.getText();
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        String username = principal.getName();
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
-        if (optionalComment.isPresent() && optionalComment.get().getUser().equals(user)) {
-            commentArticleService.updateComment(commentId, commentText);
-            return ResponseEntity.ok("Comment updated successfully.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
 
-    @DeleteMapping("/{hash}")
-    public ResponseEntity<String> deleteCommentFromArticle(
-            @PathVariable Long commentId,
-            @AuthenticationPrincipal User user) {
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-        if (optionalComment.isPresent() && optionalComment.get().getUser().equals(user)) {
+        if (userOptional.isPresent() && optionalArticle.isPresent()) {
 
-            commentArticleService.deleteComment(commentId);
-            return ResponseEntity.ok("Comment deleted successfully.");
+            articleService.deleteArticle(userOptional.get(), optionalArticle.get());
+            return ResponseEntity.ok("Article deleted successfully.");
         } else {
             return ResponseEntity.notFound().build();
         }

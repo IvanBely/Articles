@@ -14,5 +14,5 @@ public class ArticleRequest {
     private String description;
     private LifeTime lifeTime;
     @JsonProperty("isPublic")
-    private boolean isPublic;
+    private Boolean isPublic;
 }

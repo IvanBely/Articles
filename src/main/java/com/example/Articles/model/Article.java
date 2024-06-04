@@ -20,7 +20,7 @@ public class Article {
     @Column(columnDefinition = "TEXT") // Используем тип данных TEXT для поля description
     private String description;
     private String hash;
-    private int likesCount;
+    private Long likesCount;
     private LocalDateTime createTime;
     @Enumerated(EnumType.STRING)
     private LifeTime lifeTime;

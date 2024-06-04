@@ -13,8 +13,8 @@ import java.util.Locale;
 @Service
 public class CreateTimeFormServiceImpl implements CreateTimeFormService {
     @Override
-    public String createTimeForm(Article article) {
-        LocalDateTime createTime = article.getCreateTime();
+    public String createTimeForm(LocalDateTime createTime) {
+
         LocalDateTime currentTime = LocalDateTime.now();
 
         Duration duration = Duration.between(createTime, currentTime).abs();

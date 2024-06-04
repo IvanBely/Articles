@@ -22,7 +22,7 @@ public class Comment {
     private Article article;
     private LocalDateTime createTime;
     private String commentText;
-    private int likesComment;
+    private Long likesComment;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
