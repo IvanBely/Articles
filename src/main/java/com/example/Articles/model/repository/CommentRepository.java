@@ -1,6 +1,5 @@
 package com.example.Articles.model.repository;
 
-import com.example.Articles.model.Article;
 import com.example.Articles.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

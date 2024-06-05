@@ -43,21 +43,24 @@ public class AccSettingsController {
         String username = principal.getName();
 
         Optional<User> userOptional = userRepository.findByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (newEmail != null) {
-                accountService.setEmail(user, newEmail);
-            }
-            if (newUsername != null) {
-                accountService.setUsername(user, newUsername);
-            }
-            if (newPassword != null) {
-                accountService.setPassword(user, newPassword);
-            }
-            return ResponseEntity.ok("Account settings updated");
-        } else {
-            return ResponseEntity.notFound().build();
+
+        User user = userOptional.get();
+        if (newEmail == null && newUsername == null && newPassword == null) {
+            return ResponseEntity.badRequest().body("All parameters are empty");
         }
+
+        // Обновляем данные пользователя, если они были переданы
+        if (newEmail != null) {
+            accountService.setEmail(user, newEmail);
+        }
+        if (newUsername != null) {
+            accountService.setUsername(user, newUsername);
+        }
+        if (newPassword != null) {
+            accountService.setPassword(user, newPassword);
+        }
+
+        return ResponseEntity.ok("Account settings updated");
     }
 
     @DeleteMapping

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MainPageServiceImpl implements MainPageService {
@@ -25,13 +25,8 @@ public class MainPageServiceImpl implements MainPageService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<ArticleResponse> getFirstPublicArticle() {
-        // Записываем первые listSize статей, которые isPublic и lifeTime - OK.
-        int listSize = urlConfig.getPublicListSize();
-        // Список статей с данными условиями
-        List<Article> articleList = articleRepository
-                .findPublicArticleWithValidLifeTime(PageRequest.of(0, listSize)).getContent();
-        // Список статей представлений
+    public List<ArticleResponse> getArticleForm(List<Article> articleList) {
+
         List<ArticleResponse> articleResponseList = new ArrayList<>();
 
         for (Article article : articleList) {
@@ -42,7 +37,6 @@ public class MainPageServiceImpl implements MainPageService {
             articleResponse.setUsername(article.getUser().getUsername());
             articleResponse.setCreateTime(createTimeFormService.createTimeForm(article.getCreateTime()));
             articleResponse.setLikesCount(article.getLikesCount());
-            // Получаем список комментариев для статьи
             List<Comment> commentList = commentRepository.findAllByArticleId(article.getId());
             List<CommentResponse> commentResponseList = new ArrayList<>();
             for (Comment comment : commentList) {
@@ -59,6 +53,15 @@ public class MainPageServiceImpl implements MainPageService {
             articleResponseList.add(articleResponse);
         }
 
+        return articleResponseList;
+    }
+    public List<ArticleResponse> getFirstPublicArticle() {
+        int listSize = urlConfig.getPublicListSize();
+
+        List<Article> articleList = articleRepository
+                .findPublicArticleWithValidLifeTime(PageRequest.of(0, listSize)).getContent();
+
+        List<ArticleResponse> articleResponseList = getArticleForm(articleList);
         return articleResponseList;
     }
 }

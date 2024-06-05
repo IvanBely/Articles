@@ -17,7 +17,7 @@ public class Article {
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @Column(columnDefinition = "TEXT") // Используем тип данных TEXT для поля description
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String hash;
     private Long likesCount;

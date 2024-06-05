@@ -11,7 +11,9 @@ import com.example.Articles.model.repository.CommentRepository;
 import com.example.Articles.model.repository.UserRepository;
 import com.example.Articles.service.AccountService;
 import com.example.Articles.service.CreateTimeFormService;
+import com.example.Articles.service.MainPageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,39 +26,17 @@ public class AccountServiceImpl implements AccountService {
     private final CreateTimeFormService createTimeFormService;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    private final MainPageService mainPageService;
 
     @Override
     public List<ArticleResponse> getAccountArticle(User user) {
         List<Article> articleList = articleRepository.findAllByUserId(user.getId());
-        List<ArticleResponse> articleResponseList = new ArrayList<>();
 
-        for (Article article : articleList) {
-            ArticleResponse articleResponse = new ArticleResponse();
-            articleResponse.setName(article.getName());
-            articleResponse.setDescription(article.getDescription());
-            articleResponse.setUsername(article.getUser().getUsername());
-            articleResponse.setCreateTime(createTimeFormService.createTimeForm(article.getCreateTime()));
-            articleResponse.setLikesCount(article.getLikesCount());
-
-            List<Comment> commentList = commentRepository.findAllByArticleId(article.getId());
-            List<CommentResponse> commentResponseList = new ArrayList<>();
-            for (Comment comment : commentList) {
-                CommentResponse commentResponse = new CommentResponse();
-                commentResponse.setUsername(comment.getUser().getUsername());
-                commentResponse.setCreateTime(createTimeFormService.createTimeForm(comment.getCreateTime()));
-                commentResponse.setCommentText(comment.getCommentText());
-                commentResponse.setLikesCount(comment.getLikesComment());
-
-                commentResponseList.add(commentResponse);
-            }
-            articleResponse.setCommentResponseList(commentResponseList);
-
-            articleResponseList.add(articleResponse);
-        }
-
-        return articleResponseList;
+        List<ArticleResponse> articleResponses = mainPageService.getArticleForm(articleList);
+        return articleResponses;
     }
+
 
     @Override
     public UserInfoResponse getUserInfo(User user) {
@@ -82,7 +62,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void setPassword(User user, String newPassword) {
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 

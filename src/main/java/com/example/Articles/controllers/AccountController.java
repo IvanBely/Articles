@@ -19,7 +19,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 @RestController
-@RequestMapping("/@{username}")
+@RequestMapping("/u/{username}")
 public class AccountController {
     @Autowired
     private AccountService accountService;
@@ -51,9 +51,9 @@ public class AccountController {
         ArticleUrlResponse response = articleService.createArticleAndResponseUrl(userOptional.get(), articleRequest);
 
         if (response != null) {
-            return ResponseEntity.ok(response); // Возвращает ответ с URL
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Возвращает ошибку 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
     @PutMapping("/editor")
@@ -79,7 +79,6 @@ public class AccountController {
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> deleteArticle(
-            @RequestBody ArticleRequest articleRequest,
             @RequestParam Long articleId,
             Principal principal) {
 

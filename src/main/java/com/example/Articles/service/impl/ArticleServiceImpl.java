@@ -4,6 +4,7 @@ import com.example.Articles.config.UrlConfig;
 import com.example.Articles.dto.request.ArticleRequest;
 import com.example.Articles.dto.response.ArticleResponse;
 import com.example.Articles.dto.response.ArticleUrlResponse;
+import com.example.Articles.dto.response.CommentResponse;
 import com.example.Articles.model.Article;
 import com.example.Articles.model.Comment;
 import com.example.Articles.model.User;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,21 +35,31 @@ public class ArticleServiceImpl implements ArticleService {
     }
     @Override
     public Optional<ArticleResponse> getArticleResponseByHash(String hash) {
-        // Получаем объект Article из репозитория по хешу
         Optional<Article> articleOptional = articleRepository.findByHash(hash);
 
-        // Проверяем, найден ли объект. И публичный ли он.
-        if (articleOptional.isPresent() && articleOptional.get().isPublic()) {
+        if (articleOptional.isPresent()) {
             Article article = articleOptional.get();
-
-            // Преобразуем Article в ArticleResponse
             ArticleResponse articleResponse = new ArticleResponse();
             articleResponse.setName(article.getName());
             articleResponse.setDescription(article.getDescription());
             articleResponse.setUsername(article.getUser().getUsername());
+            articleResponse.setCreateTime(createTimeFormService.createTimeForm(article.getCreateTime()));
+            articleResponse.setLikesCount(article.getLikesCount());
 
-            String createTimeForm = createTimeFormService.createTimeForm(article.getCreateTime());
-            articleResponse.setCreateTime(createTimeForm);
+            List<Comment> commentList = commentRepository.findAllByArticleId(article.getId());
+            List<CommentResponse> commentResponseList = new ArrayList<>();
+
+            for (Comment comment : commentList) {
+                CommentResponse commentResponse = new CommentResponse();
+                commentResponse.setUsername(comment.getUser().getUsername());
+                commentResponse.setCreateTime(createTimeFormService.createTimeForm(comment.getCreateTime()));
+                commentResponse.setCommentText(comment.getCommentText());
+                commentResponse.setLikesCount(comment.getLikesComment());
+
+                commentResponseList.add(commentResponse);
+            }
+
+            articleResponse.setCommentResponseList(commentResponseList);
 
             return Optional.of(articleResponse);
         } else {
@@ -63,11 +75,11 @@ public class ArticleServiceImpl implements ArticleService {
         article.setHash(hash);
         article.setName(articleRequest.getName());
         article.setDescription(articleRequest.getDescription());
-        article.setCreateTime(LocalDateTime.now()); // устанавливаем текущее время
+        article.setCreateTime(LocalDateTime.now());
         article.setLifeTime(articleRequest.getLifeTime());
         article.setPublic(articleRequest.getIsPublic());
         article.setLikesCount(0L);
-        articleRepository.save(article); // Сохраняем в базу данных
+        articleRepository.save(article);
 
         return new ArticleUrlResponse(urlConfig.getHost() + "/" + article.getHash());
     }
@@ -88,7 +100,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.setPublic(articleRequest.getIsPublic());
         }
 
-        // Сохранение в базу данных
         articleRepository.save(article);
     }
 
@@ -100,4 +111,5 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleRepository.delete(article);
     }
+
 }

@@ -1,10 +1,7 @@
 package com.example.Articles.service;
 
-import com.example.Articles.dto.request.ArticleRequest;
 import com.example.Articles.dto.response.ArticleResponse;
-import com.example.Articles.dto.response.ArticleUrlResponse;
 import com.example.Articles.dto.response.UserInfoResponse;
-import com.example.Articles.model.Article;
 import com.example.Articles.model.User;
 
 import java.util.List;

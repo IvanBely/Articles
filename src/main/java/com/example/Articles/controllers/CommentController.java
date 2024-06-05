@@ -75,7 +75,6 @@ public class CommentController {
 
     @DeleteMapping("/{hash}")
     public ResponseEntity<String> deleteCommentFromArticle(
-            @RequestBody CommentRequest commentRequest,
             @RequestParam Long commentId,
             Principal principal) {
 

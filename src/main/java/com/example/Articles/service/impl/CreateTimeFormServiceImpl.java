@@ -1,6 +1,5 @@
 package com.example.Articles.service.impl;
 
-import com.example.Articles.model.Article;
 import com.example.Articles.service.CreateTimeFormService;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.stereotype.Service;

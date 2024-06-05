@@ -1,8 +1,6 @@
 package com.example.Articles.config.security;
 
-import com.example.Articles.model.repository.UserRepository;
 import com.example.Articles.service.security.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
